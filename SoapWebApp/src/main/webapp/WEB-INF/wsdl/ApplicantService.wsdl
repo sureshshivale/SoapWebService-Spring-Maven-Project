@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+				  xmlns:tns="http://www.example.org/applicantService/" 
+				  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+				  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+				  name="applicantService" 
+				  targetNamespace="http://www.example.org/applicantService/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.example.org/applicantService/">
+      <xsd:element name="applicantRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="applicantCode" type="xsd:string" minOccurs="0" maxOccurs="1" default="A007"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="applicantResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="applicantCode" type="xsd:string" minOccurs="0" maxOccurs="1" default="A007"/>
+            <xsd:element name="applicantName" type="xsd:string" minOccurs="0" maxOccurs="1" default="Suresh Shivale"/>
+            <xsd:element name="applicantAddress" type="xsd:string" minOccurs="0" maxOccurs="1" default="Pune"/>
+            <xsd:element name="applicantMobile" type="xsd:string" minOccurs="0" maxOccurs="1" default="9876543210"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="serviceException">
+        <xsd:complexType>
+          <xsd:sequence>
+             <xsd:element name="code" type="xsd:string"/>
+	         <xsd:element name="message" type="xsd:string" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  
+  <wsdl:message name="applicantRequest">
+    <wsdl:part element="tns:applicantRequest" name="applicantRequest"/>
+  </wsdl:message>
+  
+  <wsdl:message name="applicantResponse">
+    <wsdl:part element="tns:applicantResponse" name="applicantResponse"/>
+  </wsdl:message>
+  
+  <wsdl:message name="applicantException">
+    <wsdl:part element="tns:serviceException" name="applicantException"/>
+  </wsdl:message>
+  
+  <wsdl:portType name="applicantService">
+    <wsdl:operation name="getApplicant">
+      <wsdl:input message="tns:applicantRequest"/>
+      <wsdl:output message="tns:applicantResponse"/>
+      <wsdl:fault  message="tns:applicantException" name="applicantException"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <wsdl:binding name="applicantServiceSOAP" type="tns:applicantService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getApplicant">
+      <soap:operation soapAction="http://www.example.org/applicantService/getApplicant"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="applicantException">
+				<soap:fault name="applicantException" use="literal" />
+		</wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  
+  <wsdl:service name="applicantService">
+    <wsdl:port binding="tns:applicantServiceSOAP" name="applicantServiceSOAP">
+      <soap:address location="http://localhost:8080/SoapWebApp/applicantService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
